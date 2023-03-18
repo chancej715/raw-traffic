@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <pcap.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
@@ -7,12 +8,14 @@ int main(int argc, char *argv[])
 	char *dev = argv[1];		   	// Device to capture on
 	char errbuf[PCAP_ERRBUF_SIZE]; 	// Error string
 	struct bpf_program fp;		   	// Compiled filter expression
-	char filter_exp[] = "port 8000";// Filter expression
+	char *port = argv[2];			// Port to monitor
+	char filter_exp[] = "port ";	
+	strcat(filter_exp, port);		// Filter expression
 	bpf_u_int32 mask;			   	// Netmask of capturing device
 	bpf_u_int32 net;			   	// IP of capturing device
-	
+
 	pcap_dumper_t *file_pointer;	// Pointer to the dump file
-	char *filename = "packet";		// Name of file to save to
+	char *filename = argv[3];		// Name of file to save to
 	int pcount = 0;					// Number of packets read
 
 	/**
