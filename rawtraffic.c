@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <pcap.h>
 
-// User must pass device to capture as a command line argument
 int main(int argc, char *argv[])
 {
 	pcap_t *handle;				   	// Session handle
@@ -11,8 +10,14 @@ int main(int argc, char *argv[])
 	char filter_exp[] = "port 8000";// Filter expression
 	bpf_u_int32 mask;			   	// Netmask of capturing device
 	bpf_u_int32 net;			   	// IP of capturing device
+	struct pcap_pkthdr header;		// Header pcap gives us
+	const unsigned char *packet;	// The packet
 
 	printf("Device: %s\n", dev);
+
+	/**
+	 * Open device and set filter
+	*/
 
 	// Find the IPv4 network number and netmask associated with device
 	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
@@ -43,6 +48,15 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
 		return (2);
 	}
+
+	/**
+	 * Capture packet
+	*/
+	packet = pcap_next(handle, &header);
+
+	printf("Packet length: %d\n", header.len);
+
+	pcap_close(handle);
 
 	return 0;
 }
