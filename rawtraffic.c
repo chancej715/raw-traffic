@@ -4,7 +4,7 @@
 #include <pcap.h>
 
 #define SAVEFILE "capture" 		// Save filename
-#define PCOUNT 2			// Number of packets to capture
+#define PCOUNT 0			// Number of packets to capture
 
 void usage(char *progname)
 {
@@ -91,8 +91,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error reading packets from interface %s", dev);
 		return 2;
 	}
-
-	printf("Successfully captured and saved %d packet(s).\n", PCOUNT);
 
 	// Close file
 	pcap_dump_close(file_pointer);
