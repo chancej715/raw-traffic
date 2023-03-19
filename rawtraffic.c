@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Capture packets and save to file
-	pcount = pcap_dispatch(handle, 1, &pcap_dump, (char *)file_pointer);
+	pcount = pcap_loop(handle, 1, &pcap_dump, (char *)file_pointer);
 	if (pcount < 0)
 	{
 		fprintf(stderr, "Error reading packets from interface %s", dev);
