@@ -1,5 +1,5 @@
 # Raw Traffic
-This is a simple program to capture IPv4 network traffic and save it to a binary file via the [libpcap](https://www.tcpdump.org/) network traffic capture library.
+This is a simple program to capture packets on an interface and save them to a file via the [libpcap](https://www.tcpdump.org/) network traffic capture library.
 
 ## Dependencies
 This program requires the [libpcap](https://www.tcpdump.org/) development libraries. 
