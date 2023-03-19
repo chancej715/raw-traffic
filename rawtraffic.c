@@ -3,8 +3,8 @@
 #include <string.h>
 #include <pcap.h>
 
-// Default file name
-#define SAVEFILE "capture"
+#define SAVEFILE "capture" 			// Save filename
+#define PCOUNT 2					// Number of packets to capture
 
 void usage(char *progname)
 {
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	bpf_u_int32 net;			 	// IP of capturing device
 	pcap_dumper_t *file_pointer; 	// Pointer to the dump file
 	char filename[80];	 			// Name of file to save to
-	int pcount = 0;				 	// Number of packets read
+	int packet = 0;				 	// Number of packets captured
 
 	// Device and port arguments required
 	if (argc < 2)
@@ -83,12 +83,14 @@ int main(int argc, char *argv[])
 	}
 
 	// Capture packets and save to file
-	pcount = pcap_loop(handle, 1, &pcap_dump, (char *)file_pointer);
-	if (pcount < 0)
+	packet = pcap_loop(handle, PCOUNT, &pcap_dump, (char *)file_pointer);
+	if (packet < 0)
 	{
 		fprintf(stderr, "Error reading packets from interface %s", dev);
 		return 2;
 	}
+
+	printf("Successfully captured and saved %d packet(s).\n", PCOUNT);
 
 	// Close file
 	pcap_dump_close(file_pointer);
