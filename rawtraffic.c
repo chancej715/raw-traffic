@@ -3,8 +3,8 @@
 #include <string.h>
 #include <pcap.h>
 
-#define SAVEFILE "capture" 		// Save filename
-#define PCOUNT 0			// Number of packets to capture
+#define SAVEFILE "capture" // Save filename
+#define PCOUNT 0		   // Number of packets to capture
 
 void usage(char *progname)
 {
@@ -13,17 +13,17 @@ void usage(char *progname)
 
 int main(int argc, char *argv[])
 {
-	pcap_t *handle;			// Session handle
-	char *dev = argv[1];		// Device to capture on
-	char errbuf[PCAP_ERRBUF_SIZE]; 	// Error string
-	char *port = argv[2];		// Port to monitor
-	char filter_exp[] = "port ";    // Filter expression 
-	struct bpf_program fp;		// Compiled filter expression
-	bpf_u_int32 mask;		// Netmask of capturing device
-	bpf_u_int32 net;		// IP of capturing device
-	pcap_dumper_t *file_pointer; 	// Pointer to the dump file
-	char filename[80];	 	// Name of file to save to
-	int packet = 0;			// Number of packets captured
+	pcap_t *handle;				   // Session handle
+	char *dev = argv[1];		   // Device to capture on
+	char errbuf[PCAP_ERRBUF_SIZE]; // Error string
+	char *port = argv[2];		   // Port to monitor
+	char filter_exp[] = "port ";   // Filter expression
+	struct bpf_program fp;		   // Compiled filter expression
+	bpf_u_int32 mask;			   // Netmask of capturing device
+	bpf_u_int32 net;			   // IP of capturing device
+	pcap_dumper_t *file_pointer;   // Pointer to the dump file
+	char filename[80];			   // Name of file to save to
+	int packet = 0;				   // Number of packets captured
 
 	// Device and port number arguments are required
 	if (argc < 2)
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	/**
 	 * Open device for capture and set capture filter
 	 */
-	
+
 	// Open the device for capturing
 	handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL)
@@ -69,12 +69,12 @@ int main(int argc, char *argv[])
 	/**
 	 * Capture and save packets
 	 */
-	
+
 	// Set filename
 	if (argc >= 4)
-		strcpy(filename, argv[4]);
+		strcpy(filename, argv[3]);
 	else
-		strcpy(filename, SAVEFILE);	
+		strcpy(filename, SAVEFILE);
 
 	// Open dump device for writing captured packets
 	file_pointer = pcap_dump_open(handle, filename);
