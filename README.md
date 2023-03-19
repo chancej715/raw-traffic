@@ -4,15 +4,15 @@ This is a simple program to capture IPv4 network traffic and save it to a binary
 ## Dependencies
 This program requires the [libpcap](https://www.tcpdump.org/) development libraries. 
 
-If you're on Debian, you can install these libraries with the following command: 
+If you're on Debian, these libraries can be installed via the following command: 
 ```
 sudo apt-get install libpcap-dev
 ```
 
 ## Compiling
-If you're compiling with `gcc`, you must include `-l pcap` to search the `libpcap` library when linking.
+If you're compiling with `gcc`, you must include the `-l pcap` argument.
 ```
-gcc rawtraffic.c -o rawtraffic -lpcap
+gcc rawtraffic.c -o rawtraffic -l pcap
 ```
 
 ## Usage
