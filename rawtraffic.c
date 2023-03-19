@@ -1,6 +1,15 @@
+#include <libgen.h>
 #include <stdio.h>
-#include <pcap.h>
 #include <string.h>
+#include <pcap.h>
+
+// Default file name
+#define SAVEFILE "capture"
+
+void usage(char *progname)
+{
+	printf("Usage: %s <interface> <port> [<savefile name>]\n", basename(progname));
+}
 
 int main(int argc, char *argv[])
 {
@@ -8,25 +17,24 @@ int main(int argc, char *argv[])
 	char *dev = argv[1];		   	// Device to capture on
 	char errbuf[PCAP_ERRBUF_SIZE]; 	// Error string
 	char *port = argv[2];		   	// Port to monitor
-	char filter_exp[] = "port ";
-	strcat(filter_exp, port);	 	// Filter expression
+	char filter_exp[] = "port ";    // Filter expression 
 	struct bpf_program fp;		 	// Compiled filter expression
 	bpf_u_int32 mask;			 	// Netmask of capturing device
 	bpf_u_int32 net;			 	// IP of capturing device
 	pcap_dumper_t *file_pointer; 	// Pointer to the dump file
-	char *filename = argv[3];	 	// Name of file to save to
+	char filename[80];	 			// Name of file to save to
 	int pcount = 0;				 	// Number of packets read
+
+	// Device and port arguments required
+	if (argc < 2)
+	{
+		usage(argv[0]);
+		return 2;
+	}
 
 	/**
 	 * Open device and set filter
 	 */
-	// Find the IPv4 network number and netmask associated with device
-	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
-	{
-		fprintf(stderr, "Can't get netmask for device %s\n", dev);
-		return 2;
-	}
-
 	// Open the device for capturing
 	handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
 	if (handle == NULL)
@@ -35,7 +43,15 @@ int main(int argc, char *argv[])
 		return 2;
 	}
 
+	// Find the IPv4 network number and netmask associated with device
+	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
+	{
+		fprintf(stderr, "Can't get netmask for device %s\n", dev);
+		return 2;
+	}
+
 	// Compile the filter expression string
+	strcat(filter_exp, port);
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1)
 	{
 		fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handle));
@@ -52,6 +68,12 @@ int main(int argc, char *argv[])
 	/**
 	 * Capture and save packets
 	 */
+	// Set filename
+	if (argc >= 4)
+		strcpy(filename, argv[4]);
+	else
+		strcpy(filename, SAVEFILE);	
+
 	// Open dump device for writing captured packet data
 	file_pointer = pcap_dump_open(handle, filename);
 	if (file_pointer == NULL)
