@@ -4,7 +4,7 @@
 #include <pcap.h>
 
 #define SAVEFILE "capture" 		// Save filename
-#define PCOUNT 15			// Number of packets to capture
+#define PCOUNT 0			// Number of packets to capture
 
 void usage(char *progname)
 {
