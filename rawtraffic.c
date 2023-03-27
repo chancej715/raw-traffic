@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 	{
 		usage(argv[0]);
-		return 2;
+		return 1;
 	}
 
 	/**
@@ -41,14 +41,14 @@ int main(int argc, char *argv[])
 	if (handle == NULL)
 	{
 		fprintf(stderr, "Couldn't open device %s: %s\n", dev, errbuf);
-		return 2;
+		return 1;
 	}
 
 	// Find the IPv4 network number and netmask associated with device
 	if (pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
 	{
 		fprintf(stderr, "Can't get netmask for device %s\n", dev);
-		return 2;
+		return 1;
 	}
 
 	// Compile the filter expression string
@@ -56,14 +56,14 @@ int main(int argc, char *argv[])
 	if (pcap_compile(handle, &fp, filter_exp, 0, net) == -1)
 	{
 		fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handle));
-		return 2;
+		return 1;
 	}
 
 	// Set the filter
 	if (pcap_setfilter(handle, &fp) == -1)
 	{
 		fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
-		return 2;
+		return 1;
 	}
 
 	/**
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 	if (file_pointer == NULL)
 	{
 		fprintf(stderr, "Error opening file \"%s\" for writing: %s\n", filename, pcap_geterr(handle));
-		return 2;
+		return 1;
 	}
 
 	// Capture packets and save to file
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	if (packet < 0)
 	{
 		fprintf(stderr, "Error reading packets from interface %s", dev);
-		return 2;
+		return 1;
 	}
 
 	// Close file
