@@ -24,7 +24,7 @@ The interface and port number arguments are mandatory. You can optionally specif
 
 You can set the desired number of packets to be captured by changing the value of this variable:
 ```
-#define PCOUNT 0
+#define PCOUNT 15
 ```
 
 If the value of `PCOUNT` is 0, the capture will continue indefinitely until an ending condition occurs. See `pcap_loop(3PCAP)` for details.
